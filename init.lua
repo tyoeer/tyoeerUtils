@@ -9,7 +9,7 @@ f = function(mc)
 		middleclass = oldMiddleclass
 		return f
 	elseif type(mc)=="string" then
-		return require(path)
+		return require(path..mc)
 	else
 		error("Invalid input: "..type(mc))
 	end
