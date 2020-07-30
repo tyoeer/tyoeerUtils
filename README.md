@@ -21,8 +21,10 @@ local TU = require("path.to.tyoeerUtils")
 # Modules:
 -	`async`: system to limit how much of a function gets executing during a frame.
 	Does not use OOP. Horribly undocumented, but it'sn't impossible to deduce the workings from the source code (I think).
--	`datastructures`: infinite grid and a stack. They both use their own OOP. Documentation in comments in the source file.
--	`entitypool`: datastructure providing fast adding, removal, and iteration. Uses external OOP. Documentation in comments in the source file.
+-	`datastructures`: infinite grid and a stack.
+	They both use their own OOP. Documentation in comments in the source file.
+-	`entitypool`: datastructure providing fast adding, removal, and iteration.
+	Uses external OOP. Documentation in comments in the source file.
 -	`oop`: Wrapper around the middleclass class creater that makes the name optional (defaults to "Unnamed").
 	Function signature is `Class([name,] [parent])` (figure out the , yourself).
 -	`input`: Input manager that allows configurable actions depending on complex input-states.
