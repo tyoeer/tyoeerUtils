@@ -39,7 +39,7 @@
 			alias for :iterateUpwards()
 ]]--
 
-local Pool = require(select(1,...)..".oop")("Entitypool")
+local Pool = require((...):match("(.-)[^%.]+$").."oop")("Entitypool")
 
 function Pool:initialize()
 	self.containerMap = {}

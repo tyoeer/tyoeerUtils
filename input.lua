@@ -121,7 +121,7 @@ end
 
 local Module
 do
-	Module = require(select(1,...)..".oop")("InputModule")
+	Module = require((...):match("(.-)[^%.]+$").."oop")("InputModule")
 	function Module:initialize(buttonVerifier)
 		self.aliases = {}
 		self.triggers = {}
