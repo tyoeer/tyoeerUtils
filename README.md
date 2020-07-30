@@ -1,2 +1,2 @@
 # tyoeerUtils
-Utility stuff for Löve2D th way I like things.
+Utility stuff for Löve2D the way I like things.
