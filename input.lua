@@ -5,8 +5,8 @@ local input = {
 
 -- CALLBACKS (all for public use)
 
-function input.inputActivated(name,isCursorBound,group) end
-function input.inputDeactivated(name,isCursorBound,group) end
+function input.inputActivated(name,group,isCursorBound) end
+function input.inputDeactivated(name,group,isCursorBound) end
 
 -- ACTIONS
 
