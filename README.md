@@ -29,3 +29,7 @@ local TU = require("path.to.tyoeerUtils")
 	Function signature is `Class([name,] [parent])` (figure out the , yourself).
 -	`input`: Input manager that allows configurable actions depending on complex input-states.
 	Does not use OOP on the public part, but does use OOP in some internals. Horribly undocumented.
+
+# License
+
+ Chaoshead is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0).
