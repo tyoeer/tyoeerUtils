@@ -32,4 +32,4 @@ local TU = require("path.to.tyoeerUtils")
 
 # License
 
- Chaoshead is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0).
+ tyoeerUtils by tyoeer is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0).
