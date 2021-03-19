@@ -46,17 +46,7 @@ function input.parseAction(action)
 		active = false,
 	}
 	if type(action)=="table" then
-		if action.trigger then
-			if action.type then
-				error(string.format("Action [%s,%s] has both a trigger (without -s) and a type!",name,group))
-			end
-			local moduleName, button = input.parseButton(action.trigger)
-			parsed.trigger = {
-				moduleName = moduleName,
-				button = button,
-			}
-			input.addTrigger(moduleName,button, parsed)
-		elseif action.type=="and" or action.type=="or" then
+		if action.type=="and" or action.type=="or" or action.type=="nand" or action.type=="nor" then
 			parsed.type = action.type
 			parsed.count = 0
 			parsed.total = #action.triggers
@@ -65,6 +55,26 @@ function input.parseAction(action)
 				-- tables are pass-by-reference, so this also updates the same table that the triggers use
 				sub.parent = parsed
 			end
+		elseif action.type=="not" then
+			if not action.trigger then
+				error(string.format("A not-type action lacks a trigger (without -s)!"))
+			end
+			parsed.type = action.type
+			--if it has a child, it is expected to count
+			parsed.count = 0
+			local sub = input.parseAction(subAction)
+			-- tables are pass-by-reference, so this also updates the same table that the triggers use
+			sub.parent = parsed
+		elseif action.trigger then
+			if action.type then
+				error(string.format("An action has both a trigger (without -s) and a non-not type!"))
+			end
+			local moduleName, button = input.parseButton(action.trigger)
+			parsed.trigger = {
+				moduleName = moduleName,
+				button = button,
+			}
+			input.addTrigger(moduleName,button, parsed)
 		end
 		
 		if action.isCursorBound==nil then
@@ -214,6 +224,16 @@ function input.actionActivated(action)
 			if p.count == p.total then
 				input.actionActivated(p)
 			end
+		elseif p.type=="nor" then
+			if p.count > 0 and not p.active then
+				input.actionDeactivated(p)
+			end
+		elseif p.type=="nand" then
+			if p.count == p.total then
+				input.actionDeactivated(p)
+			end
+		elseif p.type=="not" then
+			input.actionDeactivated(p)
 		end
 	else
 		input.inputActivated(action.name, action.group, action.isCursorBound)
@@ -233,6 +253,16 @@ function input.actionDeactivated(action)
 			if p.count < p.total and p.active then
 				input.actionDeactivated(p)
 			end
+		elseif p.type=="nor" then
+			if p.count == 0 then
+				input.actionActivated(p)
+			end
+		elseif p.type=="nand" then
+			if p.count < p.total and p.active then
+				input.actionActivated(p)
+			end
+		elseif p.type=="not" then
+			input.actionActivated(p)
 		end
 	else
 		input.inputDeactivated(action.name, action.group, action.isCursorBound)
