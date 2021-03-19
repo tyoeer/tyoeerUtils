@@ -50,8 +50,14 @@ function input.parseAction(action)
 			parsed.type = action.type
 			parsed.count = 0
 			parsed.total = #action.triggers
+			if action.type=="nand" or action.type=="nor" then
+				parsed.active = true
+			end
 			for _, subAction in ipairs(action.triggers) do
 				local sub = input.parseAction(subAction)
+				if sub.active then
+					parsed.count = parsed.count + 1
+				end
 				-- tables are pass-by-reference, so this also updates the same table that the triggers use
 				sub.parent = parsed
 			end
@@ -61,7 +67,8 @@ function input.parseAction(action)
 			end
 			parsed.type = action.type
 			--if it has a child, it is expected to count
-			parsed.count = 0
+			parsed.count = 1
+			parsed.active = true
 			local sub = input.parseAction(subAction)
 			-- tables are pass-by-reference, so this also updates the same table that the triggers use
 			sub.parent = parsed
@@ -217,7 +224,8 @@ function input.actionActivated(action)
 		local p = action.parent
 		p.count = p.count + 1
 		if p.type=="or" then
-			if p.count > 0 and not p.active then
+			--this activation stopped it being 0
+			if p.count==1 then
 				input.actionActivated(p)
 			end
 		elseif p.type=="and" then
@@ -225,7 +233,8 @@ function input.actionActivated(action)
 				input.actionActivated(p)
 			end
 		elseif p.type=="nor" then
-			if p.count > 0 and not p.active then
+			--this activation stopped it being 0
+			if p.count==1 then
 				input.actionDeactivated(p)
 			end
 		elseif p.type=="nand" then
@@ -250,7 +259,8 @@ function input.actionDeactivated(action)
 				input.actionDeactivated(p)
 			end
 		elseif p.type=="and" then
-			if p.count < p.total and p.active then
+			--this activation stopped it being the total
+			if p.count == p.total-1 then
 				input.actionDeactivated(p)
 			end
 		elseif p.type=="nor" then
@@ -258,7 +268,8 @@ function input.actionDeactivated(action)
 				input.actionActivated(p)
 			end
 		elseif p.type=="nand" then
-			if p.count < p.total and p.active then
+			--this activation stopped it being the total
+			if p.count == p.total-1 then
 				input.actionActivated(p)
 			end
 		elseif p.type=="not" then
