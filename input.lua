@@ -16,7 +16,7 @@ function input.parseButton(selector)
 	if selector:find("%:") then
 		moduleName, button = string.match(selector,"^(%w+)%:%s?(%w-)$")
 		local module = input.modules[moduleName]
-		b = module:verify(button)
+		local b = module:verify(button)
 		if b then
 			return moduleName, b
 		else
@@ -44,6 +44,7 @@ end
 function input.parseAction(action)
 	local parsed = {
 		active = false,
+		children = {},
 	}
 	if type(action)=="table" then
 		if action.type=="and" or action.type=="or" or action.type=="nand" or action.type=="nor" then
@@ -55,6 +56,7 @@ function input.parseAction(action)
 			end
 			for _, subAction in ipairs(action.triggers) do
 				local sub = input.parseAction(subAction)
+				table.insert(parsed.children,sub)
 				if sub.active then
 					parsed.count = parsed.count + 1
 				end
@@ -69,9 +71,10 @@ function input.parseAction(action)
 			--if it has a child, it is expected to count
 			parsed.count = 1
 			parsed.active = true
-			local sub = input.parseAction(subAction)
+			local sub = input.parseAction(action.trigger)
 			-- tables are pass-by-reference, so this also updates the same table that the triggers use
 			sub.parent = parsed
+			table.insert(parsed.children,sub)
 		elseif action.trigger then
 			if action.type then
 				error(string.format("An action has both a trigger (without -s) and a non-not type!"))
@@ -149,7 +152,7 @@ do
 		if self.aliases[button] then
 			button = self.aliases[button]
 		end
-		if self:is(button) then
+		if self.is(button) then
 			return button
 		else
 			return false
