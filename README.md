@@ -1,4 +1,12 @@
+# DEPRECATED
+
+This was originally kept separate from [Chaoshead](https://github.com/tyoeer/Chaoshead/) because of other projects that would use this.
+However, those other projects never fully materialised, so the relevant code has been copied to Chaoshead for easier development, and this repository has been deprecated/archived.
+
+It is being kept around because a never released WIP project does use this, and deleting this repo would break that project.
+
 # tyoeerUtils
+
 Utility stuff for Löve2D the way I like things.
 This is basically a collection of stuff I had a tendency to copy over, so the way things work and are documentated (if they are) differ.
 
